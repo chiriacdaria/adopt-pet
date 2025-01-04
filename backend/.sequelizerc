@@ -1,0 +1,6 @@
+module.exports = {
+  "config": "./config/config.js",  // Ensure this points to the correct config file
+  "models-path": "./models",       // Path to the models in the backend folder
+  "seeders-path": "./seeders",     // Path to the seeders (if you have any)
+  "migrations-path": "./migrations" // Correct path to migrations inside the backend folder
+};
