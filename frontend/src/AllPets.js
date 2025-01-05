@@ -309,9 +309,17 @@ const handleAdopt = () => {
                  <strong>Adopted:</strong> {animal.is_adopted ? new Date(animal.adopted_at).toLocaleDateString() : 'Not adopted yet'}
                 </div>
                 <div>
-                 <strong>Contact number:</strong> {animal.contact_number}
+                 <strong>Contact number:</strong> {animal.contact_number ? animal.contact_number : 'Not available, your adoption cannot be proceed'}
                 </div>
+           
                 {userId === animal.userId ? (
+                  <div>
+                {animal.is_adopted  && 
+                  <div style={{color: '#d00f80', marginTop:'10px'}}>
+                    <strong >Someone is interested in adopting 🎉🌟🥳 Check your messages for more! 📲 </strong> 
+                   </div>
+                }
+
                   <Button
                     type="link"
                     icon={<EditOutlined />}
@@ -319,7 +327,8 @@ const handleAdopt = () => {
                     onClick={() => handleEdit(animal)} // Trigger edit
                   >
                     Edit animal info
-                  </Button>
+                    </Button>
+                    </div>
                 ) : (
                   <div style={{ marginTop: '10px' }}>
                     <strong>Adopted:</strong>

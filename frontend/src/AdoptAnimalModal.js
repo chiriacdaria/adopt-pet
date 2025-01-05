@@ -13,25 +13,28 @@ const AdoptAnimalModal = ({
 
 const handleAdoptClick = async () => {
   if (!isConfirmAdopt) {
-    console.log('!is confirme adopt')
+    console.log('!is confirm adopt');
     setIsConfirmAdopt(true);
   } else {
     try {
-      console.log('hey')
-      // Replace with actual phone number and animal name
+      console.log('hey');
+      // Replace with actual phone number, animal name, and userId
       const phoneNumber = animal.contact_number;
-      console.log('contact nr:', phoneNumber)// Contact number for the adoption team
-  const response = await fetch("http://localhost:5001/api/adoption/notify", {  // Change 3000 to 5001
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    phoneNumber: phoneNumber,
-    animalName: animal.name,
-  }),
-});
+      const userId = animal.userId; // Assuming animal.userId holds the user's ID
 
+      console.log('contact nr:', phoneNumber, 'usr id:', userId); // Contact number for the adoption team
+
+      const response = await fetch("http://localhost:5001/api/adoption/notify", {  // Change 3000 to 5001
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phoneNumber: phoneNumber,
+          animalName: animal.name,
+          userId: userId, // Send userId in the request
+        }),
+      });
 
       if (response.ok) {
         console.log("SMS notification sent successfully!");
