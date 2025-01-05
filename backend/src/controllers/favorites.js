@@ -66,7 +66,6 @@ const removeFromFavorites = async (req, res) => {
 const checkFavorite = async (req, res) => {
   const { userId, animalId } = req.body;
 
-  console.log('This is the request body:', req.body); // Log the request body for debugging
   console.log('user id:', userId, ' animal id:', animalId); // Log the individual params
 
   if (!userId || !animalId) {

@@ -59,7 +59,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,  // Can be null before adoption
       references: { model: 'users', key: 'id' },
     },
-
+      contact_number: {  // New field for contact number
+      type: DataTypes.STRING,
+      allowNull: false, // You can make it nullable if needed
+    },
   }, {
     tableName: 'animals',
     underscored: true,

@@ -12,35 +12,53 @@ const SignUp = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const navigate = useNavigate(); // Create the navigate function
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+ const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    // Check if password and confirm password match before submitting
-    if (password !== confirmPassword) {
-      setError("Passwords don't match!");
-      return;
+  // Check if password and confirm password match before submitting
+  if (password !== confirmPassword) {
+    setError("Passwords don't match!");
+    return;
+  }
+
+  try {
+    // Register the user
+    const response = await fetch('http://localhost:5001/api/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, confirmPassword }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Sign-up failed');
     }
 
-    try {
-      const response = await fetch('http://localhost:5001/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, confirmPassword }),
-      });
+    // After successful sign-up, log the user in
+    const loginResponse = await fetch('http://localhost:5001/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }), // Use the same email and password for login
+    });
 
-      if (!response.ok) {
-        throw new Error('Sign-up failed');
-      }
-
-      alert('Sign-up successful!');
-      // Redirect to the home page after successful sign-up
-      navigate('/home');
-    } catch (error) {
-      setError(error.message);
+    if (!loginResponse.ok) {
+      throw new Error('Login failed');
     }
-  };
+
+    const loginData = await loginResponse.json();
+    // Save the token (you can use it for future authenticated requests)
+    localStorage.setItem('authToken', loginData.token);
+
+    // Redirect to the home page after successful login
+    navigate('/home');
+  } catch (error) {
+    setError(error.message);
+  }
+};
+
 
   const handleEmailChange = (event) => {
     const newEmail = event.target.value;

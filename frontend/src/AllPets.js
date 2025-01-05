@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { Card, Col, Row, Spin, Tooltip, Button, Modal, Input, Form, Select } from 'antd';
 import { DeleteOutlined, HeartOutlined, HeartFilled, EditOutlined } from '@ant-design/icons';
@@ -12,7 +9,6 @@ const AllPets = () => {
   const [animals, setAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
-  const [favorites, setFavorites] = useState([]);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isConfirmAdopt, setIsConfirmAdopt] = useState(false); 
@@ -48,13 +44,13 @@ useEffect(() => {
       console.log('cacacacca', response.data.animals)
       setLoading(false);
       response.data.animals.forEach(animal => {
-        console.log('frontend user id:', userId, ' and animal id: ', animal.id);
 
         if (!userId) {
           console.error('User ID is not set');
           return;
         }
 
+        console.log(animal.id, userId)
         // Check if this animal is a favorite for the user
         axios.post('http://localhost:5001/api/favorites/check-favorite', {
           userId,
@@ -119,6 +115,7 @@ useEffect(() => {
         alert('Error removing from favorites');
       });
     } else {
+      console.log('adaug la fav')
       // Animal is not a favorite, so we add it
       axios.post('http://localhost:5001/api/favorites/add-to-favorites', { userId, animalId: id }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -307,6 +304,9 @@ const handleAdopt = () => {
                 {`${animal.type} - ${animal.age} years old`}
                 <div style={{ marginTop: '10px', color: '#888' }}>
                   <strong>Added on:</strong> {new Date(animal.added_at).toLocaleDateString()}
+                </div>
+                <div>
+                 <strong>Contact number:</strong> {animal.contact_number}
                 </div>
                 {userId === animal.userId ? (
                   <Button

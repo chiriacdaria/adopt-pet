@@ -164,6 +164,9 @@ const Favorites = () => {
                   <p style={{ fontSize: '14px', color: '#4a5568' }}>
                     <strong>Adopted:</strong> {animal.animal.is_adopted ? 'Yes' : 'No'} 📝
                   </p>
+                   <p style={{ fontSize: '14px', color: '#4a5568' }}>
+                    <strong>Contact number:</strong> {animal.animal.contact_number} 📞
+                  </p>
                 </div>
               ))}
             </div>

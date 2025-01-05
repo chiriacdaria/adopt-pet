@@ -5,7 +5,6 @@ import Login from './Login';
 import SignUp from './SignUp';
 import Profile from './Profile';
 import AdoptAFriend from './AdoptAFriend';
-import AdoptedAnimals from './AdoptedAnimals';
 import AdoptionHistory from './AdoptionHistory';
 import Favorites from './Favorites';
 import AddPet from './AddPet';
@@ -21,7 +20,6 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/adopt-a-friend" element={<AdoptAFriend />} />
           <Route path="/add-pet" element={<AddPet />} />  
-          <Route path="/adopted-pets" element={<AdoptedAnimals />} />  
           <Route path="/profile" element={<Profile />} />
           <Route path="/adoption-history" element={<AdoptionHistory />} /> 
           <Route path="/favorites" element={<Favorites />} /> 

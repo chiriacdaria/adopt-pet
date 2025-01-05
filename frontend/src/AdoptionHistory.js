@@ -7,8 +7,34 @@ import axios from 'axios'; // Import axios
 const AdoptionHistory = () => {
   const [isAddingPet, setIsAddingPet] = useState(false);
   const [adoptedAnimals, setAdoptedAnimals] = useState([]);
-  const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+	const [userEmail, setUserEmail] = useState(null);
 
+	 const fetchCurrentUser = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      console.error('User not logged in');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5001/api/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in Authorization header
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUserEmail(userData.email); // Set the user email in the state
+      } else {
+        console.error('Failed to fetch user info');
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+	 };
+	
  const fetchAdoptedAnimals = async () => {
     const token = localStorage.getItem('authToken'); // Get auth token from localStorage
 
@@ -33,7 +59,8 @@ const AdoptionHistory = () => {
 			console.log(error)
     }
   };
-  useEffect(() => {
+	useEffect(() => {
+				fetchCurrentUser();
     fetchAdoptedAnimals(); // Fetch adoption history when the component mounts
   }, []);
 

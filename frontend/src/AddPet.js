@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavHeader from './NavHeader'; // Navbar
 import SidebarNavigation from './SidebarNavigation'; // Sidebar
 import { Select } from 'antd';
 import { animalOptions } from './animalOptions'; // Adjust path as necessary
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -13,13 +13,39 @@ const AddPet = () => {
   const [age, setAge] = useState('');
   const [petType, setPetType] = useState('');
   const [petDescription, setPetDescription] = useState('');
+  const [contactNumber, setContactNumber] = useState(''); // New state for contact number
   const sortedAnimalOptions = animalOptions.sort((a, b) => a.label.localeCompare(b.label));
   const navigate = useNavigate();
-  const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+  const [userEmail, setUserEmail] = useState(null);
+  
+  	 const fetchCurrentUser = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      console.error('User not logged in');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5001/api/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in Authorization header
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUserEmail(userData.email); // Set the user email in the state
+      } else {
+        console.error('Failed to fetch user info');
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+     };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Retrieve the user ID from the authentication token stored in localStorage
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -31,17 +57,23 @@ const AddPet = () => {
     const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the payload
     const userId = decodedToken.userId;
 
-    const newPet = {
-      name: petName,
-      gender: gender,
-      age: age,
-      type: petType,
-      description: petDescription,
-      registrationDate: new Date(),
-      addedAt: new Date(),
-      adoptedAt: null,
-      userId: userId, // Use the logged-in user's ID
-    };
+   console.log('Contact Number (state) before creating newPet:', contactNumber);
+
+const newPet = {
+  name: petName,
+  gender: gender,
+  age: age,
+  type: petType,
+  description: petDescription,
+  registrationDate: new Date(),
+  addedAt: new Date(),
+  adoptedAt: null,
+  userId: userId,
+  contactNumber: contactNumber, // Include contact number
+};
+
+console.log('Request body:', JSON.stringify(newPet));  // Check the request body
+
 
     try {
       const response = await fetch('http://localhost:5001/api/animals', {
@@ -53,14 +85,17 @@ const AddPet = () => {
         body: JSON.stringify(newPet),
       });
 
+      console.log('nr:',contactNumber, response
+      )
       if (!response.ok) {
         const errorDetails = await response.json();
         console.error('Failed to add pet:', errorDetails);
         alert('Failed to add pet');
       } else {
         const addedPet = await response.json();
+        console.log('added pet:', addedPet)
         alert('Pet added successfully!');
-        navigate('/adopt-a-friend')
+        navigate('/adopt-a-friend');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -68,6 +103,9 @@ const AddPet = () => {
     }
   };
 
+  useEffect(() => {
+    fetchCurrentUser();
+  })
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f7fafc' }}>
       {/* Add Navbar */}
@@ -87,12 +125,12 @@ const AddPet = () => {
             overflowY: 'auto', // Make the right side scrollable
           }}
         >
-        <h2 style={{ textAlign: 'center', fontSize: '16px', color: '#2d3748', marginBottom: '8px', fontWeight: '600' }}>
-  Post a Pet for Adoption 📣
-</h2>
-<p style={{ textAlign: 'center', color: '#555', marginBottom: '18px' }}>
-  Every pet deserves a loving home. Share your pet for adoption and help them find a cozy, welcoming family. 🐾🐕‍🦺🚶‍♀️
-</p>
+          <h2 style={{ textAlign: 'center', fontSize: '16px', color: '#2d3748', marginBottom: '8px', fontWeight: '600' }}>
+            Post a Pet for Adoption 📣
+          </h2>
+          <p style={{ textAlign: 'center', color: '#555', marginBottom: '18px' }}>
+            Every pet deserves a loving home. Share your pet for adoption and help them find a cozy, welcoming family. 🐾🐕‍🦺🚶‍♀️
+          </p>
 
           <div style={{ padding: '16px', backgroundColor: '#f4f4f4', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
             <form onSubmit={handleSubmit}>
@@ -182,6 +220,17 @@ const AddPet = () => {
                     resize: 'vertical',
                   }}
                 />
+              </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label>Contact Number</label>
+<input
+  type="text"
+  value={contactNumber}
+  onChange={(e) => setContactNumber(e.target.value)}
+  placeholder="Contact Number"
+  style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+/>
+
               </div>
               <button
                 type="submit"

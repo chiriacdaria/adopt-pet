@@ -1,27 +1,29 @@
 const { Animal } = require('../models'); // Sequelize model
 
 // Command handler to create a new animal
-const createAnimalHandler = async (name, type, description, gender, age, userId) => {
+const createAnimalHandler = async (name, type, description, gender, age, userId, contactNumber) => {
   // Check if the name already exists in the database
-  console.log('Create animal HANDLER', userId)
+  console.log('Create animal CONTACT NR', contactNumber)
 
-  // Create a new animal in the database
+  // Create a new animal in the database with the contact number
   const newAnimal = await Animal.create({
     name,
     gender,
+    age,
     type,
     description,
-    age,
     isAdopted: false,  // Default value for isAdopted
     registrationDate: new Date(),
     addedAt: new Date(),
     adoptedAt: null,
     userId,  // This should now properly associate the animal with the authenticated user
+    //adopterId,
+    contact_number: contactNumber,    // New field for the contact number
   });
 
-  console.log('HANDLER new animal:',newAnimal);
   return newAnimal;
 };
+
 
 // Command handler to fetch an animal by ID
 const getAnimalByIdHandler = async (id) => {
@@ -46,25 +48,27 @@ const updateAnimalHandler = async (id, data) => {
 };
 
 // Controller function to handle creating a new animal
-const createAnimal = async (req,res) => {
-	console.log('create animal')
-	console.log('req:', req.user)
-  const { name, type, description, gender, age } = req.body;
-  const userId = req.user.userId; // Assuming user is authenticated and user ID is available in req.user
-  console.log('user id:',userId)
-  
-  if (!userId) {
-    return res.status(400).json({ error: 'User not authenticated' });
-  }
+const createAnimal = async (req, res) => {
+    console.log('create animal called');
+    console.log('req:', req.user);
+    const { name, type, description, gender, age, adopterId, contactNumber } = req.body;
+    const userId = req.user.userId;
+    console.log('contact number:', contactNumber); // Log here
 
-  try {
-    // Create a new animal
-    const newAnimal = await createAnimalHandler(name, type, description, gender, age, userId);
-    res.status(201).json({ message: 'Animal created successfully', animal: newAnimal });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+    if (!userId) {
+      return res.status(400).json({ error: 'User not authenticated' });
+    }
+
+    try {
+      const newAnimal = await createAnimalHandler(name, type, description, gender, age, userId, contactNumber);
+      console.log('new animal created:', newAnimal);  // Log new animal object
+      res.status(201).json({ message: 'Animal created successfully', animal: newAnimal });
+    } catch (error) {
+      console.log('Error in creating animal:', error);
+      res.status(400).json({ error: error.message });
+    }
 };
+
 
 // Controller function to get animal details by ID
 const getAnimalById = async (req,res) => {

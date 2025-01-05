@@ -7,6 +7,7 @@
     "start": "node src/app.js"
   },
   "dependencies": {
+    "@nestjs/common": "^10.4.15",
     "antd": "^5.22.7",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
@@ -17,7 +18,8 @@
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "process": "^0.11.10",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "twilio": "^5.4.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.2"
