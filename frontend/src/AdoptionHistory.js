@@ -138,7 +138,7 @@ const AdoptionHistory = () => {
 <p style={{ color: '#555' }}>
                         Description: {animal.description ? animal.description : <span style={{ color: '#888' }}>No description available</span>}
                       </p>                      <p style={{ color: '#888' }}>
-                        Adopted on: {new Date(animal.adopted_at).toLocaleDateString()}
+                        Adopted on: {animal.is_adopted ? new Date(animal.adopted_at).toLocaleDateString() : 'Not adopted yet'}
                       </p>
                     </div>
                   ))

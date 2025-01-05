@@ -305,6 +305,9 @@ const handleAdopt = () => {
                 <div style={{ marginTop: '10px', color: '#888' }}>
                   <strong>Added on:</strong> {new Date(animal.added_at).toLocaleDateString()}
                 </div>
+                  <div>
+                 <strong>Adopted:</strong> {animal.is_adopted ? new Date(animal.adopted_at).toLocaleDateString() : 'Not adopted yet'}
+                </div>
                 <div>
                  <strong>Contact number:</strong> {animal.contact_number}
                 </div>

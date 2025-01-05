@@ -102,9 +102,9 @@ const handleAdoptClick = async () => {
             <strong>Age:</strong> {animal.age} years old
           </p>
           <p style={{ fontSize: '16px', color: '#555' }}>
-            <strong>Adopted on:</strong> {new Date(animal.adopted_at).toLocaleDateString()}
+                 <strong>Adopted on:</strong> {animal.is_adopted ? new Date(animal.adopted_at).toLocaleDateString() : 'Not adopted yet'}
           </p>
-          <p style={{ fontSize: '14px', color: '#555' }}>
+          <p style={{ fontSize: '16px', color: 'green' }}>
             This pet already has a home. 🏠❤️
           </p>
         </div>
