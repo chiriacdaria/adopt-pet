@@ -3,6 +3,8 @@ const cors = require('cors');  // Import cors middleware
 const userRoutes = require('./routes/userRoutes'); // Import the user routes
 const animalRoutes = require('./routes/animalRoutes'); // Import the animal routes
 const favoritesRoutes = require('./routes/favoritesRoutes'); // Import the favorites route
+const adoptionRoutes = require('./routes/adoption')
+
 require('dotenv').config();
 
 const app = express();
@@ -19,6 +21,7 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api', userRoutes);
 app.use('/api', animalRoutes);
 app.use('/api/favorites', favoritesRoutes); // Use the favorites route
+app.use('/api/adoption', adoptionRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5001;

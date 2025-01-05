@@ -11,13 +11,40 @@ const AdoptAnimalModal = ({
 
   if (!animal) return null;
 
-  const handleAdoptClick = () => {
-    if (!isConfirmAdopt) {
-      setIsConfirmAdopt(true);
-    } else {
-      onAdopt();
+const handleAdoptClick = async () => {
+  if (!isConfirmAdopt) {
+    console.log('!is confirme adopt')
+    setIsConfirmAdopt(true);
+  } else {
+    try {
+      console.log('hey')
+      // Replace with actual phone number and animal name
+      const phoneNumber = animal.contact_number;
+      console.log('contact nr:', phoneNumber)// Contact number for the adoption team
+  const response = await fetch("http://localhost:5001/api/adoption/notify", {  // Change 3000 to 5001
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    phoneNumber: phoneNumber,
+    animalName: animal.name,
+  }),
+});
+
+
+      if (response.ok) {
+        console.log("SMS notification sent successfully!");
+        onAdopt(); // Call parent-provided onAdopt function
+      } else {
+        console.error("Failed to send SMS notification");
+      }
+    } catch (error) {
+      console.error("Error sending SMS:", error);
     }
-  };
+  }
+};
+
 
   return (
     <Modal
@@ -46,7 +73,7 @@ const AdoptAnimalModal = ({
                 color: 'white',
                 marginRight: '10px',
               }}
-              onClick={handleAdoptClick}
+              onClick={() => {console.log('am apasat'); handleAdoptClick()}}
             >
               Yes, I want to adopt! 🎉
             </Button>
